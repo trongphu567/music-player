@@ -12,6 +12,7 @@
     10. play song when click
 */
 
+// dinh nghia document
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
@@ -22,11 +23,25 @@ const playlist = $(".playlist");
 const heading = $("header h2");
 const cdThumb = $(".cd-thumb");
 const audio = $("#audio");
+
+// lay ra cac controls khi audio dang chay
+// player 
 const player = $(".player");
+
+// thanh progress tien do bai hat
 const progress = $("#progress");
 
 // lay ra nut play / pause
 const playBtn = $(".btn-toggle-play");
+
+// nut next / prev
+const nextBtn = $('.btn-next');
+const prevBtn = $('.btn-prev');
+
+// lay ra nut random
+const randomBtn = $('.btn-random');
+// lay ra nut repeat
+const repeatBtn = $('.btn-repeat');
 
 // tao ra 1 fake API chua danh sach bai hat (thong qua object)
 const app = {
@@ -34,6 +49,10 @@ const app = {
     currentIndex: 0,
     // khoi tao trang thai cua player
     isPlaying: false,
+    // khoi tao trang thai cua randomBtn
+    isRandom: false,
+    // khoi tao trang thai cua repeatBtn
+    isRepeat: false,
     songs: [
         {
             name: "Đừng Làm Trái Tim Anh Đau",
@@ -50,7 +69,7 @@ const app = {
         {
             name: "Blank Space",
             singer: "Taylor Swift",
-            path: "./assets/music/Taylor-Swift-Black-Space.mp3",
+            path: "./assets/music/Taylor-Swift-Blank-Space.mp3",
             thumb: "./assets/img/blank-space.jpg",
         },
         {
@@ -100,9 +119,9 @@ const app = {
     // 1. render songs
     render: function () {
         // tu object app tro den songs va lay ra cac thuoc tinh cua tung bai hat
-        const htmls = this.songs.map((song) => {
+        const htmls = this.songs.map((song, index) => {
         return `
-                <div class="song">
+                <div class="song ${index === this.currentIndex ? 'active' : ''}">
                     <div class="thumb" style="background-image: url('${song.thumb}')"></div>
                     <div class="body">
                         <h3 class="title">${song.name}</h3>
@@ -122,6 +141,21 @@ const app = {
     handleEvents: function () {
         const cd = $(".cd");
         const cdWidth = cd.offsetWidth;
+
+        // 4. CD rotate
+        // xu ly Cd khi audio dang chay
+        // quay -> dang phat, dung -> ko phat
+        const cdThumbAnimate = cdThumb.animate(
+            [
+                {transform: "rotate(360deg)"}
+            ],
+            {
+                duration: 10000,    // 10s
+                iterations: Infinity    // lap vo han lan
+            }
+        );
+
+        cdThumbAnimate.pause();
 
         // 2. scroll top
         document.onscroll = function () {
@@ -150,13 +184,19 @@ const app = {
 
         // khi audio dang play
         audio.onplay = function() {
+            // cap nhat trang thai cua player khi audio dang play
             app.isPlaying = true;
+            // khi audio dang play -> quay cd
+            cdThumbAnimate.play();
             player.classList.add("playing");
         }
 
         // khi audio dang pause
         audio.onpause = function() {
+            // cap nhat trang thai cua player khi dung audio
             app.isPlaying = false;
+            // khi audio dang pause -> dung cd
+            cdThumbAnimate.pause();
             player.classList.remove("playing");
         }
 
@@ -169,11 +209,82 @@ const app = {
 
         // khi tua bai hat -> lay phan tram vua tua, cap nhat thoi gian cua bai hat
         progress.oninput = function(e) {
-            console.log(e.target.value)
             const seekTime = (audio.duration / 100) * e.target.value;
             audio.currentTime = seekTime;
         }
 
+        // 5. next / prev
+        // lang nghe su kien click vao nut next
+        nextBtn.onclick = function() {
+            // neu dang o trang thai random -> random bai hat khac
+            if (app.isRandom) {
+                app.randomSong();
+            }
+            else {
+                // chuyen bai hat ke tiep
+                app.nextSong();
+            }
+            // khi chuyen bai hat -> play bai hat do
+            audio.play();
+
+            // Reset cdThumb animation
+            cdThumbAnimate.cancel();
+            cdThumbAnimate.play();
+
+            // active song
+            app.activeSong();
+            
+
+
+            
+        }
+        
+        // lang nghe su kien click vao nut prev
+        prevBtn.onclick = function() {
+            // neu dang o trang thai random -> random bai hat khac
+            if (app.isRandom) {
+                app.randomSong();
+            }
+            else {
+                // chuyen bai hat truoc do
+                app.prevSong();
+
+            }
+            // khi chuyen bai hat -> play bai hat do
+            audio.play();
+
+            // Reset cdThumb animation
+            cdThumbAnimate.cancel();
+            cdThumbAnimate.play();
+
+            // active song
+            app.activeSong();
+        }
+
+        // 6. random
+        // lang nghe su kien click vao nut random
+        randomBtn.onclick = function() {
+            app.isRandom = !app.isRandom;
+            this.classList.toggle("active", app.isRandom);
+            
+        }
+
+        // 7. next / repeat when ended
+        // lang nghe su kien khi audio ket thuc
+        audio.onended = function() {
+            if (app.isRepeat) {
+                audio.play();
+            }
+            else {
+                nextBtn.click();
+            }
+        }
+
+        // lang nghe su kien click vao nut repeat
+        repeatBtn.onclick = function() {
+            app.isRepeat = !app.isRepeat;
+            this.classList.toggle("active", app.isRepeat);
+        }
     },
 
     defineProperties: function() {
@@ -193,6 +304,63 @@ const app = {
         audio.src = this.currentSong.path;
     },
 
+    // 5. next / prev
+    nextSong: function() {
+        // tang index len 1
+        this.currentIndex++;
+        // neu index vuot qua so luong bai hat -> quay lai bai dau tien
+        if (this.currentIndex >= this.songs.length) {
+            this.currentIndex = 0;
+        }
+
+        // load bai hat hien tai len
+        this.loadCurrentSong();
+    },
+    
+    prevSong: function() {
+        // giam index xuong 1
+        this.currentIndex--;
+        // neu index < 0 -> chuyen den bai hat cuoi cung
+        if (this.currentIndex < 0) {
+            this.currentIndex = this.songs.length - 1;
+        }
+
+        // load bai hat hien tai len
+        this.loadCurrentSong();
+    },
+
+    // 6. random
+    randomSong: function() {
+        // muc tieu: random bai hat khac voi bai hat hien tai
+        // random ra 1 currentIndex
+        let newIndex;
+        do {
+            // random ra 1 so tu 0 -> so luong bai hat
+            newIndex = Math.floor(Math.random() * this.songs.length);
+        }
+        while (newIndex === this.currentIndex);
+
+        // cap nhat currentIndex moi
+        this.currentIndex = newIndex;
+        this.loadCurrentSong();
+        
+    },
+
+    // 8. active song
+    activeSong: function() {
+        // lay ra danh sach bai hat
+        const songs = $$(".song");
+        // xoa active cua bai hat hien tai va them vao bai hat moi
+        songs.forEach((song, index) => {
+            if (index === app.currentIndex) {
+                song.classList.add("active");
+            }
+            else {
+                song.classList.remove("active");
+            }
+        });
+    },
+
     start: function () {
         // dinh nghia cac thuoc tinh cho object app
         this.defineProperties();
@@ -209,3 +377,9 @@ const app = {
 };
 
 app.start();
+
+// add them logic han che toi da viec lap lai bai hat khi random
+// moi khi random -> luu lai index hoac id cua bai hat hien tai va dua vao mang da phat
+// lan luot phat sao cho ko trung lap voi id bai hat trong mang da phat
+// khi mang da phat day -> clear mang da phat va bat dau lai tu dau
+
