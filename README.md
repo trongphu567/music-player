@@ -1,5 +1,5 @@
 ### A basic music player using Javascript native logic.
-### Link project: [Music Player](https://github.com/trongphu567/music-player/)
+### Link project: [Music Player](https://trongphu567.github.io/music-player/)
 ### The player has some features:
 1. render songs
 2. scroll top
