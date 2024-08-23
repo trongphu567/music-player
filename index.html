@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
 
 <div class="player">
   <!-- Dashboard -->
@@ -45,7 +46,14 @@
 
     <!-- Progress -->
     <!-- dung de hien thi timeline cua bai hat -->
-    <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
+    
+    <div class="progress-container">
+      <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
+      <div class="time-container">
+        <span id="start-time" class="time">0:00</span>
+        <span id="end-time" class="time">0:00</span>
+      </div>
+    </div>
 
     <!-- audio tag dung de phat nhac -->
     <audio id="audio" src=""></audio>
@@ -55,7 +63,20 @@
   <div class="playlist">
 
   </div>
+
+  <footer class="footer">
+    <div class="about">
+        <p>Source code & Follow me</p>
+    </div>
+    <div class="social">
+        <a href="https://github.com/trongphu567/music-player" class="footer-social-link">
+            <i class="fab fa-github fa-lg"></i>
+        </a>
+        <a href="https://www.facebook.com/trongphu3121" class="footer-social-link">
+            <i class="fab fa-facebook fa-lg"></i>
+        </a>
+    </div>
+  </footer>
 </div>
 <script src="assets/js/main.js"></script>
 
-<!-- Design from: https://static.collectui.com/shots/3671744/musicloud-revolutionary-app-for-music-streaming-large -->
