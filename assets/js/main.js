@@ -127,6 +127,11 @@ const app = {
         },
     ],
 
+    // lay ra bai hat hien tai
+    get currentSong() {
+        return this.songs[this.currentIndex];
+    },
+
     // set config
     setConfig: function(key, value) {
         this.config[key] = value;
@@ -345,15 +350,15 @@ const app = {
         }
     },
 
-    defineProperties: function() {
-        Object.defineProperty(this, "currentSong",
-            {
-                get: function() {
-                    return this.songs[this.currentIndex];
-                }
-            }
-        )
-    },
+    // defineProperties: function() {
+    //     Object.defineProperty(this, "currentSong",
+    //         {
+    //             get: function() {
+    //                 return this.songs[this.currentIndex];
+    //             }
+    //         }
+    //     )
+    // },
     
     // cap nhat thoi gian hien tai cua bai hat
     updateCurrentTime: function() {
@@ -483,7 +488,7 @@ const app = {
         // load cau hinh cua player
         this.loadConfig();
         // dinh nghia cac thuoc tinh cho object app
-        this.defineProperties();
+        //this.defineProperties();
 
         // lang nghe / xu ly cac su kien
         this.handleEvents();
