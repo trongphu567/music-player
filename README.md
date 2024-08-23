@@ -1,4 +1,5 @@
 ### A basic music player using Javascript native logic.
+### Link project: [Music Player](https://github.com/trongphu567/music-player/)
 ### The player has some features:
 1. render songs
 2. scroll top
@@ -18,5 +19,5 @@ In the future, I will add more features to finish the player, such as:
 - Add context menu when clicked on option button's song.
 - Search songs.
 - Create a personal playlist.
-- ...
+
 Thank you F8 for guiding me to complete this mini project.
