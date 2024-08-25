@@ -301,7 +301,7 @@ const app = {
         // lang nghe su kien click vao nut random
         randomBtn.onclick = function() {
             app.isRandom = !app.isRandom;
-            app.setConfig("isRandom", app.isRandom);
+            //app.setConfig("isRandom", app.isRandom);
             // if (app.isRandom) {
             //     app.playedSongs.push(app.currentIndex);
             // }
@@ -324,7 +324,7 @@ const app = {
         // lang nghe su kien click vao nut repeat
         repeatBtn.onclick = function() {
             app.isRepeat = !app.isRepeat;
-            app.setConfig("isRepeat", app.isRepeat);
+            //app.setConfig("isRepeat", app.isRepeat);
             this.classList.toggle("active", app.isRepeat);
         }
 
@@ -384,7 +384,7 @@ const app = {
         heading.textContent = song.name;
         cdThumb.style.backgroundImage = `url('${song.thumb}')`;
         audio.src = song.path;
-        this.setConfig('currentIndex', this.currentIndex);
+        //this.setConfig('currentIndex', this.currentIndex);
         
 
         
@@ -487,7 +487,7 @@ const app = {
     start: function () {
 
         // load cau hinh cua player
-        this.loadConfig();
+        //this.loadConfig();
         // dinh nghia cac thuoc tinh cho object app
         //this.defineProperties();
 
