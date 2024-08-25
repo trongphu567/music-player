@@ -128,7 +128,7 @@ const app = {
     ],
 
     // lay ra bai hat hien tai
-    get currentSong() {
+    currentSong: function() {
         return this.songs[this.currentIndex];
     },
 
@@ -380,9 +380,10 @@ const app = {
 
     // load bai hat hien tai len
     loadCurrentSong: function() {
-        heading.textContent = this.currentSong.name;
-        cdThumb.style.backgroundImage = `url('${this.currentSong.thumb}')`;
-        audio.src = this.currentSong.path;
+        const song = this.currentSong();
+        heading.textContent = song.name;
+        cdThumb.style.backgroundImage = `url('${song.thumb}')`;
+        audio.src = song.path;
         this.setConfig('currentIndex', this.currentIndex);
         
 
